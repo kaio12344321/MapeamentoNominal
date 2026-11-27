@@ -7,18 +7,26 @@ def conectar_banco():
     return conexao
 
 
-def insere_dados(nome, telefone, endereco):
+def limpar_dados_tabela(nome_da_tabela):
     conexao = conectar_banco()
-
     cursor = conexao.cursor()
-    cursor.execute(
-        "INSERT INTO clientes (NOME, TELEFONE, ENDERECO) VALUES (?, ?, ?)",
-        (nome, telefone, endereco)
-    )
 
-    # Salvar as alterações no banco de dados
-    conexao.commit()
-    cursor.close()
+    try:
+        cursor.execute(f'DELETE FROM "{nome_da_tabela}"')
+
+        cursor.execute("""
+            DELETE FROM sqlite_sequence
+            WHERE name = ?
+        """, (nome_da_tabela,))
+
+        conexao.commit()
+
+    except Exception as erro:
+        conexao.rollback()
+        print(f"Erro ao limpar tabela: {erro}")
+
+    finally:
+        conexao.close()
 
 
 def insere_dados_xlsx(nome, telefone, endereco):

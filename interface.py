@@ -9,6 +9,11 @@ importlib.reload(funcoes)
 st.title("Sistema de Cadastro de Clientes")
 st.markdown("---")
 
+if st.button("Limpar Tabela de Clientes"):
+    funcoes.limpar_dados_tabela("clientes")  # Limpa a tabela de clientes antes de inserir novos dados
+
+
+
 # O file_uploader fica fora do botão para não sumir ao recarregar a página
 arquivo = st.file_uploader("Upload de Arquivo XLSX", type=["xlsx"])
 
